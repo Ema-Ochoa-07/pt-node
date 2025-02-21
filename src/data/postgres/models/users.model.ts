@@ -1,5 +1,11 @@
 import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
+export enum UserStatus{
+  ACTIVE = 'ACTIVE',
+  DISABLE = 'DISABLE'
+}
+
+
 @Entity()
 export class User extends BaseEntity {
 
@@ -31,9 +37,11 @@ export class User extends BaseEntity {
   })
   password: string;
 
-  @Column({
-    nullable: false,
+  
+  @Column('enum', {
+    enum: UserStatus,
+    default: UserStatus.ACTIVE
   })
-  active: boolean;
+  status: UserStatus;
 
 }

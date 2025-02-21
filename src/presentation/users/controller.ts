@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { UsersService } from "../../services/users.service"; 
-import { CreateUserDto } from "../../domain/dtos/create-user.dto";
+import { UserService } from "../../services/users.service"; 
+import { CreateUserDto } from "../../domain";
 
-export class UsersController{
+export class UserController{
 
     constructor(
-        private readonly userService: UsersService
+        private readonly userService: UserService
     ){}
 
     getUsers = (req: Request, res: Response) =>{
@@ -14,28 +14,40 @@ export class UsersController{
         .catch(error => res.status(500).json({message:error}))
     }
 
-    postUser = (req: Request, res: Response) =>{
-        
-        const [error, createUserDto] = CreateUserDto.create(req.body)
-        if(error) return res.status(422).json({message: error})
+    createUser = (req: Request, res: Response) =>{
 
-        this.userService.createUser(createUserDto!)
+        // const [error, createUserDto ] = CreateUserDto.create(req.body);
+        // if( error ) return res.status(422).json({message: error})      
+        // this.userService.createUser(createUserDto!)
+
+        const {name, email, password} = req.body
+        this.userService.createUser({name, email, password})
         .then((data) => res.status(201).json(data))
-        .catch(error => res.status(500).json({message:error}))
+        .catch(error => res.status(500).json({message:'Ups!! algo salió mal no se pudo crear el usuario, Vuelve a intentar!!'}))
     }
 
     getUser = (req: Request, res: Response) =>{
-        this.userService.getUser()
+        const {id} = req.params
+
+        if(!id){
+            return res.status(400).json({message:'Usuario no encontrado'})
+        }
+
+        if(isNaN(+id)){
+            return res.status(400).json({message:'Digita un número entero'})
+        }
+
+        this.userService.getUser(+id)
         .then((data) => res.status(200).json(data))
-        .catch(error => res.status(500).json({message:error}))
+        .catch(error => res.status(500).json({message:'Ups!! algo salió mal; intenta nuevamente!!!'}))
     }
 
-    putUser = (req: Request, res: Response) =>{
+    patchUser = (req: Request, res: Response) =>{
         res.json({ok: true})
     }
 
-    deletetUser = (req: Request, res: Response) =>{
-        this.userService.deletetUser()
+    deleteUser = (req: Request, res: Response) =>{
+        this.userService.deleteUser()
         .then((data) => res.status(200).json(data))
         .catch(error => res.status(500).json({message:error}))
     }
