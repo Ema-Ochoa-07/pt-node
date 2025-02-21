@@ -34,6 +34,6 @@ export class User extends BaseEntity {
   @Column({
     nullable: false,
   })
-  Active: boolean;
+  active: boolean;
 
 }

@@ -1,12 +1,14 @@
+import { CreateUserDto } from "../domain/dtos/create-user.dto"
+
 export class UsersService{
 
     
-    async AllUsers(){
+    async allUsers(){
         return 'Get All user'
     }
 
-    async CreatetUser(){
-        return 'Create user'
+    async createUser(createUserDto: CreateUserDto){
+        return 'Createuserr'
     }
 
     async getUser(){
