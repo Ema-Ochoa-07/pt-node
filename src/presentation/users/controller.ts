@@ -29,9 +29,6 @@ export class UserController{
     getUser = (req: Request, res: Response) =>{
         const {id} = req.params
 
-        if(!id){
-            return res.status(400).json({message:'Usuario no encontrado'})
-        }
 
         if(isNaN(+id)){
             return res.status(400).json({message:'Digita un número entero'})
