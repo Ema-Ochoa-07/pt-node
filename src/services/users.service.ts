@@ -51,8 +51,28 @@ export class UserService{
        }
     }
 
-    async updateUser(){
-        return 'Update user'
+    async updateUser(userData: CreateUserDto, idClient: number){
+
+      try {
+        const user  = await User.findOne({
+          where:{
+            id: idClient
+          }
+        })
+
+        if(!user){
+          return "Usuario no encontrado"
+        }
+
+        user.name = userData.name
+        user.email = userData.email
+        user.password = userData.password
+        return await user.save()
+
+      } catch (error) {
+        throw new Error("Internal Server Error");
+      }
+
     }
 
     async deleteUser(){

@@ -38,7 +38,17 @@ export class UserController{
     }
 
     patchUser = (req: Request, res: Response) =>{
-        res.json({ok: true})
+        
+        const {id} = req.params
+        const [error, createUserDto ] = CreateUserDto.create(req.body)
+
+        if(isNaN(+id)){
+            return res.status(400).json({message:'Digita un número entero'})
+        }
+
+        this.userService.updateUser(createUserDto!, +id)
+        .then((data) => res.status(200).json(data))
+        .catch(error => res.status(500).json({message:error}))
     }
 
     deleteUser = (req: Request, res: Response) =>{
