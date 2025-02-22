@@ -16,7 +16,7 @@ export class UserService{
       }
     }
 
-    async createUser(createUserData: any){
+    async createUser(createUserData: CreateUserDto){
         const user = new User();
     
         user.name = createUserData.name;

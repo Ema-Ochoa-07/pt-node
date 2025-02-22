@@ -17,8 +17,8 @@ export class CreateUserDto {
      if( !password ) return ['missing password']
 
      if(!regularExps.email.test(email)) return['Invalid email']
-     if(!regularExps.password.test(password)) return [` The password must be at leaste 10 characters long and contain at
-        least one uppercase, one lowercase letter, one number, and one special character `]
+     if(!regularExps.password.test(password)) return [` The password must be at leaste 10 characters long and contain at`+ ` \n ` +
+        `least one uppercase, one lowercase letter, one number, and one special character `]
 
  
      return [undefined, new CreateUserDto(name, email, password)]

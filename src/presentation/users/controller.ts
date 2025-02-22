@@ -16,12 +16,10 @@ export class UserController{
 
     createUser = (req: Request, res: Response) =>{
 
-        // const [error, createUserDto ] = CreateUserDto.create(req.body);
-        // if( error ) return res.status(422).json({message: error})      
-        // this.userService.createUser(createUserDto!)
+        const [error, createUserDto ] = CreateUserDto.create(req.body);
+        if( error ) return res.status(422).json({message: error})      
+        this.userService.createUser(createUserDto!)
 
-        const {name, email, password} = req.body
-        this.userService.createUser({name, email, password})
         .then((data) => res.status(201).json(data))
         .catch(error => res.status(500).json({message:'Ups!! algo salió mal no se pudo crear el usuario, Vuelve a intentar!!'}))
     }
