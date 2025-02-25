@@ -1,5 +1,10 @@
-import { User, UserStatus } from "../data";
+import { User } from "../data";
 import { CreateUserDto } from "../domain/dtos/create-user.dto"
+
+export enum UserStatus{
+  ACTIVE = 'ACTIVE',
+  DISABLE = 'DISABLE'
+}
 
 export class UserService{
 
@@ -75,8 +80,24 @@ export class UserService{
 
     }
 
-    async deleteUser(){
-        return 'Remove user'
+    async deleteUser(id: number){
+      try {
+        const user = await User.findOne({
+          where:{
+            id:id
+          }
+        }) 
+        
+        if(!user){
+          return "Usuario no encontrado"
+        }
+        user.status= UserStatus.DISABLE
+        
+        return user.save()
+      } catch (error) {
+        throw new Error("Internal Server Error");
+      }
+      
     }
 
 }
