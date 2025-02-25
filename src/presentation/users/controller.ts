@@ -21,7 +21,7 @@ export class UserController{
         this.userService.createUser(createUserDto!)
 
         .then((data) => res.status(201).json(data))
-        .catch(error => res.status(500).json({message:'Ups!! algo salió mal no se pudo CREAR el usuario, Vuelve a intentar!!'}))
+        .catch(error => res.status(500).json({message:error.message}))
     }
 
     getUser = (req: Request, res: Response) =>{
@@ -34,7 +34,7 @@ export class UserController{
 
         this.userService.getUser(+id)
         .then((data) => res.status(200).json(data))
-        .catch(error => res.status(500).json({message:'Ups!! algo salió mal; intenta nuevamente!!!'}))
+        .catch(error => res.status(500).json({message:`Ups!! algo salió mal; no se pudo ENCONTRAR el usuario con id ${id}`}))
     }
 
     patchUser = (req: Request, res: Response) =>{

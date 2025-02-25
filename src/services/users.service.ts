@@ -22,8 +22,20 @@ export class UserService{
     }
 
     async createUser(createUserData: CreateUserDto){
-        const user = new User();
-    
+        
+      const existUser = await User.findOne({
+        where:{
+          email:createUserData.email,
+          status: UserStatus.ACTIVE
+          
+        }
+      })
+
+      if(existUser){
+        throw new Error("El correo ya existe, vuelve a intentar!!!");
+      }
+
+      const user = new User();    
         user.name = createUserData.name;
         user.email = createUserData.email;
         user.password = createUserData.password;
@@ -45,7 +57,7 @@ export class UserService{
         }) 
        
         if(!user){
-          return "Usuario no encontrado"
+          throw new Error ("Usuario no encontrado")
         }   
         return user  
        } 
@@ -66,7 +78,7 @@ export class UserService{
         })
 
         if(!user){
-          return "Usuario no encontrado"
+          throw new Error ("Usuario no encontrado")
         }
 
         user.name = userData.name
@@ -89,7 +101,7 @@ export class UserService{
         }) 
         
         if(!user){
-          return "Usuario no encontrado"
+          throw new Error ("Usuario no encontrado")
         }
         user.status= UserStatus.DISABLE
         
