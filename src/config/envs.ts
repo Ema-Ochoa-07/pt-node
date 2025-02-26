@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenv/config';
 import { get } from "env-var";
 
 export const envs = {
@@ -10,9 +10,5 @@ export const envs = {
     DB_DATABASE: get('DATABASE_DATABASE').required().asString(),
 
     JWT_SEED: get('JWT_SEED').required().asString().trim()
-
-
-    
-
-
 }
+

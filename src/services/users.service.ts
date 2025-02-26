@@ -1,4 +1,5 @@
 import { bcryptAdapter } from "../config";
+import { JwtAdapter } from "../config/jwt.adapter";
 import { User } from "../data";
 import { CreateUserDto } from "../domain/dtos/create-user.dto"
 import { LoginUserDto } from "../domain/dtos/login.dto";
@@ -28,11 +29,19 @@ export class UserService{
       const user = new User();    
         user.name = createUserData.name;
         user.email = createUserData.email;
-        // user.password = createUserData.password;
         user.password = bcryptAdapter.hash(createUserData.password);
     
         try {
-          return await user.save();
+          const userSave = await user.save();
+          const token = await JwtAdapter.generateToken({id: user.id})
+          if(!token){
+            throw new Error('Error al crear el token')
+          }
+          return {
+            token,
+            user: userSave
+          }
+
         } catch (error) {
           throw new Error("Internal Server Error");
           
