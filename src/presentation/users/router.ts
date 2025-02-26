@@ -13,8 +13,10 @@ export class UserRoutes {
     const userService = new UserService();
     const userController = new UserController(userService);
 
-    router.get('/', userController.getUsers)
     router.post('/', userController.createUser)
+    router.post('/login', userController.loginUser)
+
+    router.get('/', userController.getUsers)
     router.get('/:id', userController.getUser)
     router.patch('/:id', userController.patchUser)
     router.delete('/:id', userController.deleteUser)

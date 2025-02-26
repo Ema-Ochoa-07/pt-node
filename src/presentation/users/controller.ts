@@ -1,18 +1,13 @@
 import { Request, Response } from "express";
 import { UserService } from "../../services/users.service"; 
 import { CreateUserDto } from "../../domain";
+import { error } from "console";
 
 export class UserController{
 
     constructor(
         private readonly userService: UserService
     ){}
-
-    getUsers = (req: Request, res: Response) =>{
-        this.userService.allUsers()
-        .then((data) => res.status(200).json(data))
-        .catch(error => res.status(500).json({message:error}))
-    }
 
     createUser = (req: Request, res: Response) =>{
 
@@ -23,6 +18,18 @@ export class UserController{
         .then((data) => res.status(201).json(data))
         .catch(error => res.status(500).json({message:error.message}))
     }
+    
+    loginUser = (req: Request, res: Response) =>{
+
+    }
+
+
+    getUsers = (req: Request, res: Response) =>{
+        this.userService.allUsers()
+        .then((data) => res.status(200).json(data))
+        .catch(error => res.status(500).json({message:error}))
+    }
+   
 
     getUser = (req: Request, res: Response) =>{
         const {id} = req.params
