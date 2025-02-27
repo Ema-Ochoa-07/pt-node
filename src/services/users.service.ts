@@ -3,6 +3,7 @@ import { JwtAdapter } from "../config/jwt.adapter";
 import { User } from "../data";
 import { CreateUserDto } from "../domain/dtos/create-user.dto"
 import { LoginUserDto } from "../domain/dtos/login.dto";
+import { EmailService } from "./email.service";
 
 export enum UserStatus{
   ACTIVE = 'ACTIVE',
@@ -10,6 +11,10 @@ export enum UserStatus{
 }
 
 export class UserService{
+
+  constructor(
+    private readonly emailService: EmailService
+  ){}
 
     
     async createUser(createUserData: CreateUserDto){

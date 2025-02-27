@@ -9,6 +9,12 @@ export const envs = {
     DB_PASSWORD: get('DATABASE_PASSWORD').required().asString(),
     DB_DATABASE: get('DATABASE_DATABASE').required().asString(),
 
-    JWT_SEED: get('JWT_SEED').required().asString().trim()
+    JWT_SEED: get('JWT_SEED').required().asString().trim(),
+
+    MAILER_SERVICE: get('MAILER_SERVICE').required().asString(),
+    MAILER_EMAIL: get('MAILER_EMAIL').required().asString(),
+    MAILER_SECRET_KEY: get('MAILER_SECRET_KEY').required().asString(),
+    SEND_EMAIL: get('SEND_EMAIL').required().asString()
+
 }
 
