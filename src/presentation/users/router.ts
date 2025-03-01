@@ -15,13 +15,15 @@ export class UserRoutes {
     const emailService = new EmailService(
       envs.MAILER_SERVICE,
       envs.MAILER_EMAIL,
-      envs.MAILER_SECRET_KEY
+      envs.MAILER_SECRET_KEY,
+      envs.SEND_EMAIL
     )
 
     const userService = new UserService(emailService)
     const userController = new UserController(userService)
 
     router.post('/', userController.createUser)
+    router.get('/validate-email/:token', userController.validateEmail)
     router.post('/login', userController.loginUser)
 
     router.get('/', userController.getUsers)

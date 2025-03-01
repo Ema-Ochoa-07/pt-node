@@ -1,4 +1,4 @@
-import { bcryptAdapter } from "../config";
+import { bcryptAdapter, envs } from "../config";
 import { JwtAdapter } from "../config/jwt.adapter";
 import { User } from "../data";
 import { CreateUserDto } from "../domain/dtos/create-user.dto"
@@ -15,6 +15,33 @@ export class UserService{
   constructor(
     private readonly emailService: EmailService
   ){}
+
+
+  //Step-1 ValidaciónEmail
+  sendEmailValidationLink = async (email:string) => {
+    const token = await JwtAdapter.generateToken( {email})
+    if(!token) throw new Error('Error al generar el token')
+
+      const link = `${envs.WEBSERVICE_URL}/users/validate-email/${token}`
+      const html = `
+      <h1>Validate your email</h1>
+      <p>Click on the following link to validate your email</p>
+      <a href="${ link }">Validate your email: ${email}</a>
+      `
+
+
+      const isSent = this.emailService.sendEmail({
+        to: email,
+        subject: 'Validate your email',
+        htmlBody:html
+      })
+
+      if(!isSent){
+        throw new Error('Error al enviar el email')
+      }
+      return true
+
+  }
 
     
     async createUser(createUserData: CreateUserDto){
@@ -38,9 +65,13 @@ export class UserService{
     
         try {
           const userSave = await user.save();
+
+          //Step-2 ValidaciónEmail
+          await this.sendEmailValidationLink(user.email)
+
           const token = await JwtAdapter.generateToken({id: user.id})
           if(!token){
-            throw new Error('Error al crear el token')
+            throw new Error('Error al generar el toke')
           }
           return {
             token,
@@ -52,6 +83,34 @@ export class UserService{
           
         }
       }
+
+      //Step-3 ValidaciónEmail
+      public validateEmail = async (token: string) =>{
+        const payload = await JwtAdapter.validateToken(token)
+        if(!payload){
+          throw new Error("Token Inválido");
+        }
+
+        const {email} = payload as {email: string}
+        if(!email) throw new Error('Error token email')
+
+        const user = await User.findOne({
+          where:{
+            email: email
+          }
+        })
+        if(!user) throw new Error('No existe el email')
+        user.emailValidated = true
+      
+        try {
+          await user.save()
+          return true
+
+        } catch (error) {
+          throw new Error('Internal server Error')
+        }
+      }
+    
 
       async login(loginData: LoginUserDto){
 

@@ -44,4 +44,10 @@ export class User extends BaseEntity {
   })
   status: UserStatus;
 
+  @Column({
+    type: "boolean",
+    default: false
+  })
+  emailValidated: boolean
+
 }

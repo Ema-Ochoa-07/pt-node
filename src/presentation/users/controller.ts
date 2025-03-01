@@ -7,6 +7,7 @@ export class UserController{
 
     constructor(
         private readonly userService: UserService
+        
     ){}
 
     createUser = (req: Request, res: Response) =>{
@@ -18,7 +19,16 @@ export class UserController{
         .then((data) => res.status(201).json(data))
         .catch(error => res.status(500).json({message:error.message}))
     }
-    
+
+
+    validateEmail = async (req:Request, res:Response) => {
+
+        const {token} = req.params
+        this.userService.validateEmail(token)
+        .then(() => res.status(200).json('Tu email ha sido validado'))
+        .catch(error => res.status(500).json({message:error.message}))
+    }
+     
     loginUser = (req: Request, res: Response) =>{
 
     }
