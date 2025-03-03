@@ -74,7 +74,7 @@ export class UserService{
             throw new Error('Error al generar el toke')
           }
           return {
-            token,
+            // token,
             user: userSave
           }
 
@@ -112,26 +112,36 @@ export class UserService{
       }
     
 
+
       async login(loginData: LoginUserDto){
+        const existUser = await User.findOne({
+          where:{
+            email: loginData.email,
+            status: UserStatus.ACTIVE
+          }
+        })
+        if(!existUser){
+          throw new Error("El usuario no existe, porfavor registrese!!!");
+        }
 
-        // const existUser = await User.findOne({
-        //   where:{
-        //     email: loginData.email,
-        //     status: UserStatus.ACTIVE
-        //   }
-        // })
-        // if(!existUser){
-        //   throw new Error("El usuario no existe, porfavor registrese!!!");
-        // }
-        // const userLogin = new User()
-        // userLogin.email = loginData.email
-        // userLogin.password = bcryptAdapter.hash(createUserData.password);
+        const isMatching = bcryptAdapter.compare(loginData.password, existUser.password)
+        if(!isMatching){
+          throw new Error("Error!! contraseña incorrecota");
+        }
+        
+        const token = await JwtAdapter.generateToken({id: existUser.id})
+        if(!token){
+          throw new Error("Error!! mientras se crea el token");
+        }
 
-        // try {
-        //   userLogin.save()
-        // } catch (error) {
-        //   throw new Error("Internal Server Error");
-        // }
+        return{
+          token: token,
+          user: {
+            id: existUser.id,
+            name: existUser.name,
+            email: existUser.email
+          }
+        }
 
       }
 

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserService } from "../../services/users.service"; 
 import { CreateUserDto } from "../../domain";
 import { error } from "console";
+import { LoginUserDto } from "../../domain/dtos/login.dto";
 
 export class UserController{
 
@@ -30,6 +31,13 @@ export class UserController{
     }
      
     loginUser = (req: Request, res: Response) =>{
+
+        const [error, loginUserDto] = LoginUserDto.create(req.body)
+        if(error) return res.status(422).json({message: error})
+
+        this.userService.login(loginUserDto!)
+        .then((data) => res.status(200).json(data))
+        .catch(error => res.status(422).json({message:error.message}))
 
     }
 
